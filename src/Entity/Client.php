@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Client extends User
 {
 
-    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Commande::class)]
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Commande::class, cascade: ['persist', 'remove'])]
     private Collection $commande;
 
     #[ORM\OneToOne(inversedBy: 'client', cascade: ['persist', 'remove'])]

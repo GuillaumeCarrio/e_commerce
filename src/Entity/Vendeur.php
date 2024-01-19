@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Vendeur extends User
 {
 
-    #[ORM\OneToMany(mappedBy: 'vendeur', targetEntity: Produit::class)]
+    #[ORM\OneToMany(mappedBy: 'vendeur', targetEntity: Produit::class, cascade: ['persist', 'remove'])]
     private Collection $produit;
 
     #[ORM\OneToOne(inversedBy: 'vendeur', cascade: ['persist', 'remove'])]

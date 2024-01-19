@@ -30,7 +30,7 @@ class Produit
     #[ORM\OneToMany(mappedBy: 'produit', targetEntity: LigneCommande::class, cascade: ['persist', 'remove'])]
     private Collection $ligneCommandes;
 
-    #[ORM\ManyToOne(inversedBy: 'produit')]
+    #[ORM\ManyToOne(inversedBy: 'produit', cascade: ['persist', 'remove'])]
     private ?Vendeur $vendeur = null;
 
     public function __construct()
