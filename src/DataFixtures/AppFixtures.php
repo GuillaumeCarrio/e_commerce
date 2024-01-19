@@ -35,16 +35,16 @@ class AppFixtures extends Fixture
         $uvendeur->setNom($faker->lastName);
         $uvendeur->setPrenom($faker->firstName);
         $uvendeur->setPassword($this->passwordHasher->hashPassword($uvendeur,'vendeur'));
-        $vendeur = new Vendeur;
-        $vendeur->setUser($uvendeur);
+        // $vendeur = new Vendeur;
+        // $vendeur->setUser($uvendeur);
         $uclient = new User();
         $uclient->setEmail("client@client.fr");
         $uclient->setRoles(["ROLE_CLIENT"]);
         $uclient->setNom($faker->lastName);
         $uclient->setPrenom($faker->firstName);
         $uclient->setPassword($this->passwordHasher->hashPassword($uclient,'client'));
-        $client = new Client;
-        $client->setUser($uclient);
+        // $client = new Client;
+        // $client->setUser($uclient);
         $user = new User();
         $user->setEmail("user@user.fr");
         $user->setRoles(["ROLE_CLIENT"]);
@@ -55,8 +55,8 @@ class AppFixtures extends Fixture
         $manager->persist($uclient);
         $manager->persist($user);
         $manager->persist($admin);
-        $manager->persist($vendeur);
-        $manager->persist($client);
+        // $manager->persist($vendeur);
+        // $manager->persist($client);
         $manager->flush();
         
         for ($u = 0; $u < 10; $u++) {

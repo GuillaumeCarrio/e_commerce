@@ -6,6 +6,7 @@ use App\Repository\ProduitRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 class Produit
@@ -24,7 +25,9 @@ class Produit
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $qteStock = null;
 
-    #[ORM\OneToMany(mappedBy: 'produit', targetEntity: LigneCommande::class)]
+    
+    #[Groups(["produit:read"])]
+    #[ORM\OneToMany(mappedBy: 'produit', targetEntity: LigneCommande::class, cascade: ['persist', 'remove'])]
     private Collection $ligneCommandes;
 
     #[ORM\ManyToOne(inversedBy: 'produit')]
