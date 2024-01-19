@@ -10,10 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: VendeurRepository::class)]
 class Vendeur extends User
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
 
     #[ORM\OneToMany(mappedBy: 'vendeur', targetEntity: Produit::class)]
     private Collection $produit;
@@ -24,11 +20,6 @@ class Vendeur extends User
     public function __construct()
     {
         $this->produit = new ArrayCollection();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     /**

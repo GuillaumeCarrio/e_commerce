@@ -25,7 +25,7 @@ class AppFixtures extends Fixture
 
         $admin = new User();
         $admin->setEmail("admin@admin.fr");
-        $admin->setRoles(["ROLE_ADMIN"]);
+        $admin->setRoles(["ROLE_VENDEUR"]);
         $admin->setNom($faker->lastName);
         $admin->setPrenom($faker->firstName);
         $admin->setPassword($this->passwordHasher->hashPassword($admin,'admin'));
@@ -35,14 +35,19 @@ class AppFixtures extends Fixture
         $uvendeur->setNom($faker->lastName);
         $uvendeur->setPrenom($faker->firstName);
         $uvendeur->setPassword($this->passwordHasher->hashPassword($uvendeur,'vendeur'));
+        $vendeur = new Vendeur;
+        $vendeur->setUser($uvendeur);
         $uclient = new User();
         $uclient->setEmail("client@client.fr");
         $uclient->setRoles(["ROLE_CLIENT"]);
         $uclient->setNom($faker->lastName);
         $uclient->setPrenom($faker->firstName);
         $uclient->setPassword($this->passwordHasher->hashPassword($uclient,'client'));
+        $client = new Client;
+        $client->setUser($uclient);
         $user = new User();
         $user->setEmail("user@user.fr");
+        $user->setRoles(["ROLE_CLIENT"]);
         $user->setPassword($this->passwordHasher->hashPassword($user,'user'));
         $user->setNom($faker->lastName);
         $user->setPrenom($faker->firstName);
@@ -50,10 +55,13 @@ class AppFixtures extends Fixture
         $manager->persist($uclient);
         $manager->persist($user);
         $manager->persist($admin);
-
-        for ($p = 0; $p < 10; $p++) {
+        $manager->persist($vendeur);
+        $manager->persist($client);
+        $manager->flush();
+        
+        for ($u = 0; $u < 10; $u++) {
             $user = new User();
-            $user->setEmail($faker->email);
+            $user->setEmail("test$u@test.fr");
             $user->setPassword($this->passwordHasher->hashPassword($user,$user->getEmail()));
             $user->setNom($faker->lastName);
             $user->setPrenom($faker->firstName);
@@ -62,15 +70,40 @@ class AppFixtures extends Fixture
         }
         $manager->flush();
 
-        $vendeur = new Vendeur;
-        $vendeur->setUser($uvendeur);
-        $client = new Client;
-        $client->setUser($uclient);
-        $manager->persist($vendeur);
-        $manager->persist($client);
         $manager->flush();
 
-        
+        for ($p = 0; $p < 10; $p++) {
+            $product = new Produit();
+            $product->setDesignation($faker->company);
+            $product->setPrixUnite($faker->randomFloat(2,0,null));
+            $product->setQteStock($faker->randomDigit);
+            $manager->persist($user);
+        };
+        $manager->flush();
+
+        for ($c = 0; $c < 10; $c++) {
+            $commande = new Commande();
+            $commande->setDateCommande($faker->dateTime);
+            $manager->persist($commande);
+        };
+        $manager->flush();
+
+        for ($lc = 0; $lc < 10; $lc++) {
+            $ligneCommande = new LigneCommande();
+            $ligneCommande->setQteCommandee($faker->randomDigit);
+
+            $product = new Produit();
+            $product->setDesignation($faker->company);
+            $product->setPrixUnite($faker->randomFloat(2,0,null));
+            $product->setQteStock($faker->randomDigit);
+            $ligneCommande->setProduit($product);
+
+            $command = new Commande();
+            $command->setDateCommande($faker->dateTime);
+            $ligneCommande->setCommande($command);
+            $manager->persist($ligneCommande);
+        };
+        $manager->flush();
 
     }
 }
