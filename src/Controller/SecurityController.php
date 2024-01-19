@@ -6,15 +6,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
 class SecurityController extends AbstractController
 {
     #[Route(path: '/login', name: 'app_login')]
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(AccessDecisionManagerInterface $accessDecisionManager, AuthenticationUtils $authenticationUtils): Response
     {
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
+        if ($this->getUser()) {
+            $token = new UsernamePasswordToken($this->getUser(), 'none', $this->getUser()->getRoles());
+            if ($accessDecisionManager->decide($token, ['ROLE_VENDEUR'])) {
+                return $this->redirectToRoute('app_produit_index');
+            } else{
+                return $this->redirectToRoute('app_commande_index');
+            }
+        }
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
