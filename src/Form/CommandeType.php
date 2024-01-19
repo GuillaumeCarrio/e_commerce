@@ -17,7 +17,7 @@ class CommandeType extends AbstractType
             ->add('dateCommande')
             ->add('client', EntityType::class, [
                 'class' => Client::class,
-'choice_label' => 'id',
+                'choice_label' => 'id',
             ])
         ;
     }
